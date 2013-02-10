@@ -3,6 +3,10 @@ BUSL
 
 A pretty sweet bus light thing for magic bus
 
+Public Feed:
+
+http://mbus.pts.umich.edu/shared/public_feed.xml
+
 Needs:
 
 * A network connection.
