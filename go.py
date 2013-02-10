@@ -20,6 +20,9 @@ tree = ET.fromstring(magic_bus_xml)
 
 all_routes = []
 
+address_input = raw_input("Enter an address: ")
+
+
 for route in tree.findall('route'):
    for item in route:
       if item.tag == 'name':
