@@ -1,7 +1,7 @@
 import sys, io, urllib
 from time import time
+from stop import *
 import elementtree.ElementTree as ET
-
 
 def get_all_umich_stops():
    ##################
@@ -16,30 +16,33 @@ def get_all_umich_stops():
    magic_bus_xml = magic_bus_xml_socket.read()
    magic_bus_xml_socket.close()
 
-
    #Build the XML tree
    tree = ET.fromstring(magic_bus_xml)
    
    stops = []
    for route in tree.findall('route'):
       for item in route:
+         if item.tag == 'name':
+            route_name = item.text
          if item.tag == 'stop':
-            stop_dict = {}
-            name_dict = {}
+            names = []
             for stop in item:
                if (stop.tag == 'name'):
                   if (stop.text != 'None'): 
-                     name_dict['1'] = stop.text
+                     names.append(stop.text)
                if (stop.tag == 'name2'):
                   if (stop.text != 'None'): 
-                     name_dict['2'] = stop.text
+                     names.append(stop.text)
                if (stop.tag == 'name3'):
                   if (stop.text != 'None'): 
-                     name_dict['3'] = stop.text
-                  stop_dict['name'] = name_dict 
+                     names.append(stop.text)
                if (stop.tag == 'latitude'):
-                  stop_dict['lat'] = stop.text
+                  lat = stop.text
                if (stop.tag == 'longitude'):
-                  stop_dict['lng'] = stop.text
-                  stops.append(stop_dict)
+                  lng = stop.text
+	       if (stop.tag == 'id1'):
+                  uid = stop.text
+	    	  cur_stop = Stop(uid, names, ['UMICH'], [route_name], lat, lng)
+		  stops.append(cur_stop)
    return stops
+
