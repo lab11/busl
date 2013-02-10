@@ -22,19 +22,31 @@ all_routes = []
 
 address_input = raw_input("Enter an address: ")
 
-
+stops = []
 for route in tree.findall('route'):
    for item in route:
       if item.tag == 'name':
         all_routes.append(item.text)
-      if item.tag == 'id':
-	print item.text
+      #if item.tag == 'id':
+	#print item.text
       if item.tag == 'stop':
+        stop_dict = {}
+        name_dict = {}
         for stop in item:
-           if (stop.tag == 'name' 
-                or stop.tag == 'name2'
-                or stop.tag == 'name3'):
-              if (stop.text != 'None'):
-                 print stop.text
- 
-print all_routes            
+           if (stop.tag == 'name'):
+              if (stop.text != 'None'): 
+               name_dict['1'] = stop.text
+           if (stop.tag == 'name2'):
+              if (stop.text != 'None'): 
+               name_dict['2'] = stop.text
+           if (stop.tag == 'name3'):
+              if (stop.text != 'None'): 
+               name_dict['3'] = stop.text
+               stop_dict['name'] = name_dict 
+           if (stop.tag == 'latitude'):
+             stop_dict['lat'] = stop.text
+           if (stop.tag == 'longitude'):
+             stop_dict['lng'] = stop.text
+             stops.append(stop_dict)
+
+print stops
