@@ -2,6 +2,7 @@ import sys, io, urllib
 from time import time
 import elementtree.ElementTree as ET
 
+
 def get_all_umich_stops():
    ##################
    # Static Variables
