@@ -7,8 +7,17 @@ class Stop:
    """
    def __init__(self, uid, names, systems, active_routes, lat, lng):
       self.uid = uid
-		self.names = names
-		self.systems = systems
-		self.active_routes = active_routes
-		self.lat = lat
+      self.names = names
+      self.systems = systems
+      self.active_routes = active_routes
+      self.lat = lat
       self.lng = lng
+
+   def __str__(self):
+      s = ("Stop " + self.uid +
+      "\nName(s): " + str(self.names) +
+      "\nBus system(s): " + str(self.systems) +
+      "\nActive route(s): " + str(self.active_routes) +
+      "\nLat: " + self.lat +
+      "\nLong: " + self.lng) 
+      return s

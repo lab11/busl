@@ -3,6 +3,8 @@ from time import time
 from stop import *
 import elementtree.ElementTree as ET
 
+global_uid_counter = 0
+
 def get_all_umich_stops():
    ##################
    # Static Variables
@@ -40,9 +42,10 @@ def get_all_umich_stops():
                   lat = stop.text
                if (stop.tag == 'longitude'):
                   lng = stop.text
-	       if (stop.tag == 'id1'):
-                  uid = stop.text
-	    	  cur_stop = Stop(uid, names, ['UMICH'], [route_name], lat, lng)
-		  stops.append(cur_stop)
+               if (stop.tag == 'id1'):
+                  uid = global_uid_counter
+                  global_uid_counter += 1
+                  cur_stop = Stop(uid, names, ['UMICH'], [route_name], lat, lng)
+                  stops.append(cur_stop)
    return stops
 
