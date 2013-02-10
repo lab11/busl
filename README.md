@@ -10,6 +10,9 @@ http://mbus.pts.umich.edu/shared/public_feed.xml
 Needs:
 
 * A network connection.
+* Elementtree
+   - Download at effbot.org/downloads
+   - Install with standard "sudo python setup.py install"
 * GoogleMaps for Python.
    - Get easy_install (included in PyPi's setuptools)
 	  (See directions at pypi.python.org/pypi/setuptools)
