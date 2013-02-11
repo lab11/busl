@@ -39,9 +39,9 @@ def get_all_umich_stops():
                   if (stop.text != 'None'): 
                      names.append(stop.text)
                if (stop.tag == 'latitude'):
-                  lat = stop.text
+                  lat = float(stop.text)
                if (stop.tag == 'longitude'):
-                  lng = stop.text
+                  lng = float(stop.text)
                if (stop.tag == 'id1'):
                   global uid_counter
                   uid = uid_counter

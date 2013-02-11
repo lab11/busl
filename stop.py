@@ -14,10 +14,10 @@ class Stop:
       self.lng = lng
 
    def __str__(self):
-      s = ("Stop " + self.uid +
+      s = ("Stop " + str(self.uid) +
       "\nName(s): " + str(self.names) +
       "\nBus system(s): " + str(self.systems) +
       "\nActive route(s): " + str(self.active_routes) +
-      "\nLat: " + self.lat +
-      "\nLong: " + self.lng) 
+      "\nLat: " + str(self.lat) +
+      "\nLong: " + str(self.lng)) 
       return s

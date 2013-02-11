@@ -1,4 +1,6 @@
 import googlemaps
+import time
+import math
 
 ERROR_VAL = float("inf")
 
@@ -12,37 +14,43 @@ def addr_to_latlng(addr):
       print "We're not sure where that address is. Got anything better?"
    return lat, lng
 
-#Input:
-#   Src and dest lat/long
-#Output:
-#   distance (driving route) and time ("walking" along driving route)
-def google_dist(src_lat, src_lng, dest_lat, dest_lng):
-   try:
-      directions = gmaps.directions((src_lat, src_lng), (dest_lat, dest_lng))
-      distance = directions['Directions']['Distance']['meters']
-      time = directions['Directions']['Duration']['seconds']
-   except googlemaps.GoogleMapsError:
-      print "Problem calculating distance to " + dest_lat + ", " + dest_lng
-      distance = ERROR_VAL
-      time = ERROR_VAL 
-   return distance, walking_duration(time)
-
 #Input: 
 #   a src lat/long 
 #   a list of Stop objects
 #   how many of the closest stops to return
 #Output:
 #   the n closest stops 
-def get_n_closest(src_lat, src_lng, stops, n):
-   walking_info = [[google_dist(src_lat, src_lng, s.lat, s.lng), s] for s in stops]
+def order_by_latlng_distance(src_latlng, stops):
+   walking_info = []
+   for s in stops:
+      dist_km = distance(src_latlng, (s.lat, s.lng))
+      dur_min = walking_time(dist_km)
+      walking_info.append([dur_min, dist_km*1000, s])
    walking_info.sort()
-   return walking_info[:n]
+   return walking_info
 
-def get_n_closest(src_addr, stops, n):
-   s_lat, s_lng = addr_to_latlng(src_addr)
-   return get_n_closest(s_lat, s_lng, stops, n)
+def order_by_distance(src_addr, stops):
+   return order_by_latlng_distance(addr_to_latlng(src_addr), stops)
 
+def walking_time(dist_km):
+   walking_speed = 5.0 #km/hr
+   time_in_mins = (dist_km/walking_speed)*60
+   time_in_mins += 3#to account for packing, stairs, etc.
+   return time_in_mins
 
-#All units are in seconds
-def walking_duration(driving_duration):
-   return driving_duration * 10
+#Author: Wayne Dick
+#www.platoscave.net/blog/2009/oct/5/calculate-distance-latitude-longitude-python
+#Much thanks! 
+def distance(origin, destination):
+    lat1, lon1 = origin
+    lat2, lon2 = destination
+    radius = 6371 # km
+
+    dlat = math.radians(lat2-lat1)
+    dlon = math.radians(lon2-lon1)
+    a = math.sin(dlat/2) * math.sin(dlat/2) + math.cos(math.radians(lat1)) \
+        * math.cos(math.radians(lat2)) * math.sin(dlon/2) * math.sin(dlon/2)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+    d = radius * c
+
+    return d
