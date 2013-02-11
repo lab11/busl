@@ -1,6 +1,7 @@
 import sched, time, urllib
 from stop import *
 import elementtree.ElementTree as ET
+from microcontroller import *
 
 event_1_flag = False
 event_2_flag = False
@@ -37,7 +38,6 @@ def fire_event(event_type):
       event_2_flag = False
       event_3_flag = False
       
-
 def check_events(toa, threshold):
    if toa <= threshold and toa >= threshold-3*60:
       fire_event(1)   
@@ -96,6 +96,7 @@ def query_worker(name, threshold, routes, sc):
                check_events(toa, threshold)
                stop_good = False
    #print "Beat"
+   beat()
    sc.enter(2,1,query_worker,(name, threshold, routes, sc,))
 
 def query(name, threshold, routes):

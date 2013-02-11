@@ -1,11 +1,20 @@
 import serial
 
+ser = ''
+
 def get_ports():
   import glob
   return (glob.glob("/dev/tty.usb*"))
 
+def beat():
+   ser.write('B')
+   
+def fire(type):
+   ser.write(type)
+
 def test_hardware(port):
-       print '\t Starting hardware test...'
+       print '\n\t Starting hardware test...'
+       global ser 
        ser = serial.Serial(port, 9600)
        
        # RX TEST
