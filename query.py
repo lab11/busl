@@ -7,7 +7,27 @@ event_2_flag = False
 event_3_flag = False
 
 def fire_event(event_type):
-   print "firing event type " + str(event_type)
+   if event_type == 1 and event_1_flag == False:
+      event_1_flag = True
+      event_2_flag = False
+      event_3_flag = False
+      print "\tfiring event type " + str(event_type)
+   if event_type == 1 and event_1_flag == True:
+      print "\tfired event type " + str(event_type)
+   if event_type == 2 and event_2_flag == False:
+      event_1_flag = False
+      event_2_flag = True
+      event_3_flag = False
+      print "\tfiring event type " + str(event_type)
+   if event_type == 2 and event_2_flag == True:
+      print "\tfired event type " + str(event_type)
+   if event_type == 3 and event_3_flag == False:
+      event_1_flag = False
+      event_2_flag = False
+      event_3_flag = True
+      print "\tfiring event type " + str(event_type)
+   if event_type == 3 and event_3_flag == True:
+      print "\tfired event type " + str(event_type)
 
 def check_events(toa, threshold):
    if toa <= threshold and toa >= threshold-3*60:
@@ -59,9 +79,9 @@ def query_worker(name, threshold, routes, sc):
                    if (toa <= threshold-3*60):
                       toa_list.remove(min(toa_list))
                    else:
+                      print "\tTime to arrival: " + str(toa/60) + " minutes"
                       break
                print "\tWalking time: " + str(threshold/60) + " minutes"
-               print "\tTime to arrival: " + str(toa/60) + " minutes"
                check_events(toa, threshold)
                stop_good = False
    #print "Beat"
