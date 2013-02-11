@@ -2,11 +2,15 @@ import sched, time, urllib
 from stop import *
 import elementtree.ElementTree as ET
 
+event_1_flag = False
+event_2_flag = False
+event_3_flag = False
+
 def fire_event(event_type):
    print "firing event type " + str(event_type)
 
 def check_events(toa, threshold):
-   if toa <= threshold:
+   if toa <= threshold and toa >= threshold-3*60:
       fire_event(1)   
    elif toa >= threshold and toa <= threshold + 5*60:
       fire_event(2)
@@ -18,7 +22,7 @@ def query_worker(name, threshold, routes, sc):
    magic_bus_xml_socket = urllib.urlopen(magic_bus_xml_url)
    magic_bus_xml = magic_bus_xml_socket.read()
    magic_bus_xml_socket.close()
-   print "Looking for " + name + " on routes: " + str(routes)
+   #print "Looking for " + name + " on routes: " + str(routes)
    tree = ET.fromstring(magic_bus_xml)
    for route in tree.findall('route'):
      skip = False
@@ -34,7 +38,7 @@ def query_worker(name, threshold, routes, sc):
          for stop in item: 
            if stop.tag == 'name':
              if stop.text == name:
-               print "Hit on: " + stop.text + " on route: " + route_name 
+               print "Monitoring " + stop.text + " on route: " + route_name 
                stop_good = True
            #TODO pretty bad hardcoding here....
            if stop.tag == 'toa1' and stop_good == True:
@@ -48,10 +52,19 @@ def query_worker(name, threshold, routes, sc):
            if stop.tag == 'toa5' and stop_good == True:
                toa_list.append(float(stop.text))
            if stop.tag == 'toacount' and stop_good == True:    
-               toa = min(toa_list)
+               while True:
+                   if (len(toa_list) == 0):
+                      break
+                   toa = min(toa_list)
+                   if (toa <= threshold-3*60):
+                      toa_list.remove(min(toa_list))
+                   else:
+                      break
+               print "\tWalking time: " + str(threshold/60) + " minutes"
+               print "\tTime to arrival: " + str(toa/60) + " minutes"
                check_events(toa, threshold)
                stop_good = False
-   print "Beat"
+   #print "Beat"
    sc.enter(2,1,query_worker,(name, threshold, routes, sc,))
 
 def query(name, threshold, routes):
