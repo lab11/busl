@@ -18,3 +18,7 @@ Needs:
 	  (See directions at pypi.python.org/pypi/setuptools)
 	- Use easy_install to get the googlemaps module
 	  (sudo easy_install googlemaps)
+* netgrowl
+   - Download from the.taoofmac.com/space/projects/netgrowl
+   - just a script, import it!
+   - Then use the tutorial at blog.mckuhn.de/2007/10/sending-growl-notifications-from-python.html

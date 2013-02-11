@@ -6,28 +6,37 @@ event_1_flag = False
 event_2_flag = False
 event_3_flag = False
 
+#TODO Does not handle buses going the wrong way
 def fire_event(event_type):
+   global event_1_flag
+   global event_2_flag
+   global event_3_flag
    if event_type == 1 and event_1_flag == False:
       event_1_flag = True
       event_2_flag = False
       event_3_flag = False
       print "\tfiring event type " + str(event_type)
-   if event_type == 1 and event_1_flag == True:
+   elif event_type == 1 and event_1_flag == True:
       print "\tfired event type " + str(event_type)
-   if event_type == 2 and event_2_flag == False:
+   elif event_type == 2 and event_2_flag == False:
       event_1_flag = False
       event_2_flag = True
       event_3_flag = False
       print "\tfiring event type " + str(event_type)
-   if event_type == 2 and event_2_flag == True:
+   elif event_type == 2 and event_2_flag == True:
       print "\tfired event type " + str(event_type)
-   if event_type == 3 and event_3_flag == False:
+   elif event_type == 3 and event_3_flag == False:
       event_1_flag = False
       event_2_flag = False
       event_3_flag = True
       print "\tfiring event type " + str(event_type)
-   if event_type == 3 and event_3_flag == True:
+   elif event_type == 3 and event_3_flag == True:
       print "\tfired event type " + str(event_type)
+   else:
+      event_1_flag = False
+      event_2_flag = False
+      event_3_flag = False
+      
 
 def check_events(toa, threshold):
    if toa <= threshold and toa >= threshold-3*60:
@@ -36,6 +45,8 @@ def check_events(toa, threshold):
       fire_event(2)
    elif toa >= threshold + 5*60 and toa <= threshold + 10*60:
       fire_event(3)
+   else: 
+      fire_event(-1)
 
 def query_worker(name, threshold, routes, sc):
    magic_bus_xml_url = 'http://mbus.pts.umich.edu/shared/public_feed.xml'
