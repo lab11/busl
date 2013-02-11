@@ -46,7 +46,15 @@ def get_all_umich_stops():
                   global uid_counter
                   uid = uid_counter
                   uid_counter += 1
-                  cur_stop = Stop(uid, names, ['UMICH'], [route_name], lat, lng)
+                  found = False
+                  for stop_obj in stops:
+                    if stop_obj.names[0] == names[0]:
+                        stop_obj.active_routes.append(route_name)
+                        #print "adding route at " + names[0]
+                  if found == False:   
+                    cur_stop = Stop(uid, names, ['UMICH'], [route_name], lat, lng)
                   stops.append(cur_stop)
    return stops
 
+
+get_all_umich_stops()
