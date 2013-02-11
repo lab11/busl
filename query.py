@@ -29,14 +29,26 @@ def query_worker(name, threshold, routes, sc):
          else:
             route_name = item.text
        if item.tag == 'stop' and skip == False:         
-         stop_good = False;
+         stop_good = False
+         toa_list = []
          for stop in item: 
            if stop.tag == 'name':
              if stop.text == name:
                print "Hit on: " + stop.text + " on route: " + route_name 
                stop_good = True
+           #TODO pretty bad hardcoding here....
            if stop.tag == 'toa1' and stop_good == True:
-               toa = float(stop.text)
+               toa_list.append(float(stop.text))
+           if stop.tag == 'toa2' and stop_good == True:
+               toa_list.append(float(stop.text))
+           if stop.tag == 'toa3' and stop_good == True:
+               toa_list.append(float(stop.text))
+           if stop.tag == 'toa4' and stop_good == True:
+               toa_list.append(float(stop.text))
+           if stop.tag == 'toa5' and stop_good == True:
+               toa_list.append(float(stop.text))
+           if stop.tag == 'toacount' and stop_good == True:    
+               toa = min(toa_list)
                check_events(toa, threshold)
                stop_good = False
    print "Beat"
