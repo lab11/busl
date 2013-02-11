@@ -3,6 +3,8 @@ import maplib
 from get_input import *
 from system_setup import *
 from query import *
+from microcontroller import *
+
 
 def main():
    options_per_page = 5
@@ -13,11 +15,22 @@ def main():
   -------------------------
   """
    #SYSTEM SETUP
-   #Set up GPIO for hardware
    #Check for network access
    if internet_on() == False:
       print "No Internet = No BUSL! \n Please Check Your Interwebs" 
       return -1      
+   
+   #Set up GPIO for hardware
+   print """
+  -------------------------
+  | Select Serial Port: |
+  -------------------------"""
+   ports = display_serial_ports(0)
+   index = get_user_int("\nPlease pick a serial port for the Arduino: ", len(ports))
+   #if test_hardware(ports[index]) == False:
+   #   print "No Microcontroller = No BUSL Lights! \n Please Check Your Ports"
+    
+   
 
    #USER CONFIG
    location = get_user_addr()
