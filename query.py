@@ -16,11 +16,19 @@ def query_worker(name, threshold, routes, sc):
        if item.tag == 'name':
          if not item.text in routes:
             skip = True
-       if item.tag == 'stop' and skip == False:
+         else:
+            route_name = item.text
+       if item.tag == 'stop' and skip == False:         
+         stop_good = False;
          for stop in item: 
            if stop.tag == 'name':
              if stop.text == name:
-               print "Hit on: " + stop.text
+               print "Hit on: " + stop.text + " on route: " + route_name 
+               stop_good = True
+           if stop.tag == 'toa1' and stop_good == True:
+               print "time to arrival: " + stop.text
+               print "adjusted time: " + str(float(stop.text) + threshold) 
+               stop_good = False
    print "Up'd"
    sc.enter(2,1,query_worker,(name, threshold, routes, sc,))
 
