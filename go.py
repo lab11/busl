@@ -57,4 +57,4 @@ def get_all_umich_stops():
    return stops
 
 
-get_all_umich_stops()
+#get_all_umich_stops()
