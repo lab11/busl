@@ -24,11 +24,9 @@ def display_results(ordering, start_index, n):
       "\n\tApprox. walking time: " + str(int(s[0])+1) + " mins")
       option += 1
 
-def display_serial_ports(start_index):
-   import glob
-   results = (glob.glob("/dev/tty.usb*"))
+def display_serial_ports(list, start_index):
    option = start_index
-   for port in results:
+   for port in list:
      print "\n [" + str(option) + "]\t" + port
      option += 1
-   return results
+  

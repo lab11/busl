@@ -1,5 +1,9 @@
 import serial
 
+def get_ports():
+  import glob
+  return (glob.glob("/dev/tty.usb*"))
+
 def test_hardware(port):
     try:
        ser = serial.Serial(port, 9600)
