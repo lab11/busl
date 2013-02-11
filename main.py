@@ -7,7 +7,11 @@ from query import *
 def main():
    options_per_page = 5
 
-   print "Welcome to BUSL!"
+   print """
+  -------------------------
+  |   Welcome to BUS-L!   |
+  -------------------------
+  """
    #SYSTEM SETUP
    #Set up GPIO for hardware
    #Check for network access
@@ -35,27 +39,38 @@ def main():
       user_input = raw_input("\nSelect a stop number or press 'c' to see more stops: ")
  
    #get preferred stop
-   preferred_stop = ordering[int(user_input)]
-   print "\nLooking up route information for " + preferred_stop[2].names[1] + " (" + preferred_stop[2].names[0] + ") . . ."
+   stop_info = ordering[int(user_input)]
+   preferred_stop = stop_info[2]
+   preferred_stop_dist = stop_info[1]
+   preferred_stop_walk_time = stop_info[0]
+   print "\nLooking up route information for " + preferred_stop.names[1] + " (" + preferred_stop.names[0] + ") . . ."
 
    #present available bus routes
+   active_routes = preferred_stop.active_routes
    print """
   ----------------------
   | Active bus routes: |
   ----------------------"""
    page_index = 0 
-   user_input = "c" 
-   while (user_input == "c"):
-      #      display_results(ordering, page_index, options_per_page)
+   user_input = "" 
+   while (user_input == ""):
+      i = 0
+      for route in active_routes:
+         print "\n [" + str(i) + "]\t" + route
+         i += 1
       page_index += options_per_page
-      user_input = raw_input("\nSelect a stop number or press 'c' to see more stops: ")
+      user_input = raw_input("\nSelect one or more route numbers (e.g. 1 or 1, 2, 3): ")
+
+   route_nums = user_input.split(',')
+   route_nums = [int(x.strip()) for x in route_nums]
 
    #get selection(s)
-   #start querying!
+   preferred_routes = [active_routes[x] for x in route_nums]
 
-        #QUERYING
-   #query('name',distance threshold,list of name1)
-        #If within threshold, trigger event
+   print "\nWatching for routes! \n"
+
+   #START BUS LIGHT SERVER
+   query(preferred_stop.names[0], preferred_stop_walk_time*60, preferred_routes)
 
 if __name__ == "__main__":
    main()

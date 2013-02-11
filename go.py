@@ -56,5 +56,4 @@ def get_all_umich_stops():
                   stops.append(cur_stop)
    return stops
 
-
-get_all_umich_stops()
+#get_all_umich_stops()
