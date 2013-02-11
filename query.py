@@ -60,7 +60,7 @@ def query(name, threshold, routes):
    s.enter(2,1,query_worker,(name,threshold,routes,s,))
    s.run()
 
-query('Murfin and Bonisteel N', 40, ['Northwood (Weekends)'])
+#query('Murfin and Bonisteel N', 40, ['Northwood (Weekends)'])
 
 
 
