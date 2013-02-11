@@ -2,6 +2,7 @@ import go
 import maplib
 from get_input import *
 from system_setup import *
+from query import *
 
 def main():
 	print "Welcome to BUSL!"
@@ -23,8 +24,7 @@ def main():
         #start querying!
 
         #QUERYING
-	#Every 15 sec:
-	#Get bus(es) etas for stop
+	#query('name',distance threshold,list of name1)
         #If within threshold, trigger event
 
 if __name__ == "__main__":
