@@ -30,8 +30,8 @@ def main():
   -------------------------"""
      display_serial_ports(ports, 0)
      index = get_user_int("\nPlease pick a serial port for the Arduino: ", len(ports))
-     #if test_hardware(ports[index]) == False:
-     #   print "No Microcontroller = No BUSL Lights! \n Please Check Your Ports"
+     if test_hardware(ports[index]) == False:
+        print "No Microcontroller = No BUSL Lights! \n Please Check Your Ports"
     
    
 

@@ -99,12 +99,10 @@ def query_worker(name, threshold, routes, sc):
    sc.enter(2,1,query_worker,(name, threshold, routes, sc,))
 
 def query(name, threshold, routes):
-   print 'Running Light Server!'
    s = sched.scheduler(time.time, time.sleep)
    s.enter(2,1,query_worker,(name,threshold,routes,s,))
    s.run()
 
-#query('Murfin and Bonisteel N', 40, ['Northwood (Weekends)'])
 
 
 
