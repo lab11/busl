@@ -8,6 +8,7 @@ event_2_flag = False
 event_3_flag = False
 
 #TODO Does not handle buses going the wrong way
+#TODO Not tested with multiple routes... probably doesn't work
 def fire_event(event_type):
    global event_1_flag
    global event_2_flag
@@ -49,6 +50,7 @@ def check_events(toa, threshold):
       fire_event(-1)
 
 def query_worker(name, threshold, routes, sc):
+  try:
    magic_bus_xml_url = 'http://mbus.pts.umich.edu/shared/public_feed.xml'
    magic_bus_xml_socket = urllib.urlopen(magic_bus_xml_url)
    magic_bus_xml = magic_bus_xml_socket.read()
@@ -97,7 +99,9 @@ def query_worker(name, threshold, routes, sc):
                stop_good = False
    #print "Beat"
    beat()
-   sc.enter(2,1,query_worker,(name, threshold, routes, sc,))
+  except: 
+   print "Skipped"
+  sc.enter(2,1,query_worker,(name, threshold, routes, sc,))
 
 def query(name, threshold, routes):
    s = sched.scheduler(time.time, time.sleep)
