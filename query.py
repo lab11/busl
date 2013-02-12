@@ -17,27 +17,28 @@ def fire_event(event_type):
       event_1_flag = True
       event_2_flag = False
       event_3_flag = False
-      print "\tfiring event type " + str(event_type)
+      fire("red")
    elif event_type == 1 and event_1_flag == True:
       print "\tfired event type " + str(event_type)
    elif event_type == 2 and event_2_flag == False:
       event_1_flag = False
       event_2_flag = True
       event_3_flag = False
-      print "\tfiring event type " + str(event_type)
+      fire("orange")
    elif event_type == 2 and event_2_flag == True:
       print "\tfired event type " + str(event_type)
    elif event_type == 3 and event_3_flag == False:
       event_1_flag = False
       event_2_flag = False
       event_3_flag = True
-      print "\tfiring event type " + str(event_type)
+      fire("cyan")
    elif event_type == 3 and event_3_flag == True:
       print "\tfired event type " + str(event_type)
    else:
       event_1_flag = False
       event_2_flag = False
       event_3_flag = False
+      fire("off")
       
 def check_events(toa, threshold):
    if toa <= threshold and toa >= threshold-3*60:
@@ -48,6 +49,7 @@ def check_events(toa, threshold):
       fire_event(3)
    else: 
       fire_event(-1)
+   return
 
 def query_worker(name, threshold, routes, sc):
   try:
