@@ -1,15 +1,17 @@
 import sched, time, urllib
+import hue
 from stop import *
 import elementtree.ElementTree as ET
 from microcontroller import *
 
+counter = 0
 event_1_flag = False
 event_2_flag = False
 event_3_flag = False
 
 #TODO Does not handle buses going the wrong way
 #TODO Not tested with multiple routes... probably doesn't work
-def fire_event(event_type):
+def fire_event(event_type, light):
    global event_1_flag
    global event_2_flag
    global event_3_flag
@@ -17,41 +19,47 @@ def fire_event(event_type):
       event_1_flag = True
       event_2_flag = False
       event_3_flag = False
-      fire("red")
+      hue.set_red(light)
+      #fire("red")
    elif event_type == 1 and event_1_flag == True:
       print "\tfired event type " + str(event_type)
    elif event_type == 2 and event_2_flag == False:
       event_1_flag = False
       event_2_flag = True
       event_3_flag = False
-      fire("orange")
+      hue.set_purple(light)
+      #fire("orange")
    elif event_type == 2 and event_2_flag == True:
       print "\tfired event type " + str(event_type)
    elif event_type == 3 and event_3_flag == False:
       event_1_flag = False
       event_2_flag = False
       event_3_flag = True
-      fire("cyan")
+      hue.set_yellow(light)
+      #fire("cyan")
    elif event_type == 3 and event_3_flag == True:
       print "\tfired event type " + str(event_type)
    else:
       event_1_flag = False
       event_2_flag = False
       event_3_flag = False
-      fire("off")
+      hue.set_white(light)
+      #fire("off")
       
-def check_events(toa, threshold):
+def check_events(toa, threshold, light):
    if toa <= threshold and toa >= threshold-3*60:
-      fire_event(1)   
+      fire_event(1, light)   
    elif toa >= threshold and toa <= threshold + 5*60:
-      fire_event(2)
+      fire_event(2, light)
    elif toa >= threshold + 5*60 and toa <= threshold + 10*60:
-      fire_event(3)
+      fire_event(3, light)
    else: 
-      fire_event(-1)
+      fire_event(-1, light)
+
    return
 
-def query_worker(name, threshold, routes, sc):
+def query_worker(name, threshold, routes, light, sc):
+  global counter
   try:
    magic_bus_xml_url = 'http://mbus.pts.umich.edu/shared/public_feed.xml'
    magic_bus_xml_socket = urllib.urlopen(magic_bus_xml_url)
@@ -97,19 +105,21 @@ def query_worker(name, threshold, routes, sc):
                       print "\tTime to arrival: " + str(toa/60) + " minutes"
                       break
                print "\tWalking time: " + str(threshold/60) + " minutes"
-               check_events(toa, threshold)
+               check_events(toa, threshold, light)
                stop_good = False
    #print "Beat"
    beat()
   except: 
    print "Skipped"
-  sc.enter(2,1,query_worker,(name, threshold, routes, sc,))
+  print counter
+  counter = counter + 1
+  sc.enter(2,1,query_worker,(name, threshold, routes, light, sc,))
 
-def query(name, threshold, routes):
+def query(name, threshold, routes, light):
+   fire_event(1, light)
    s = sched.scheduler(time.time, time.sleep)
-   s.enter(2,1,query_worker,(name,threshold,routes,s,))
+   s.enter(2,1,query_worker,(name,threshold,routes,light,s,))
    s.run()
-
 
 
 

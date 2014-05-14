@@ -1,13 +1,25 @@
-import go
-import maplib
+import sys, getopt, maplib, go, hue
 from get_input import *
 from system_setup import *
 from query import *
 from microcontroller import *
 
+ERROR_VAL = float('inf')
 
-def main():
+def main(argv):
+   serial = False;
    options_per_page = 5
+   
+   try:
+      opts, args = getopt.getopt(argv,"hs:",["serial="])
+   except getopt.GetoptError:
+      print "main.py -serial <Y|N>"
+      sys.exit(2)
+   for opt, arg in opts:
+      if opt in ('-s', '--serial'):
+	if (arg == 'Y'):
+	  serial = True
+
 
    print """
   -------------------------
@@ -21,26 +33,45 @@ def main():
       return -1      
    
 
-   ports = get_ports()
-   if len(ports) != 0:
-     #Set up GPIO for hardware
-     print """
+   #HUE SETUP
+   #Check for hue
+   print """
   -------------------------
-  | Select Serial Port: |
-  -------------------------"""
-     display_serial_ports(ports, 0)
-     index = get_user_int("\nPlease pick a serial port for the Arduino: ", len(ports))
-     if test_hardware(ports[index]) == False:
-        print "No Microcontroller = No BUSL Lights! \n Please Check Your Ports"
-    
-   
+  |   Connecting to hue!   |
+  -------------------------
+  """
+   # TODO: add in options to do this better (select a specific light, etc)
+   lights = hue.hue_connect() 
+   light = lights[1]
+   hue.ack(light)       
 
-   #USER CONFIG
-   location = get_user_addr()
+   if (serial):
+     ports = get_ports()
+     if len(ports) != 0:
+       #Set up GPIO for hardware
+       print """
+    -------------------------
+    | Select Serial Port: |
+    -------------------------"""
+       display_serial_ports(ports, 0)
+       index = get_user_int("\nPlease pick a serial port for the Arduino: ", len(ports))
+       if test_hardware(ports[index]) == False:
+          print "No Microcontroller = No BUSL Lights! \n Please Check Your Ports"
    
+ 
+   #USER CONFIG
+   print """
+  -------------------------
+  | Lets Find Some Stops! |
+  -------------------------
+  """
+   location = get_user_addr()
+ 
    #find X closest stops to user
    all_stops = go.get_all_umich_stops()
-   ordering = maplib.order_by_distance(location, all_stops)
+   ordering = ERROR_VAL
+   while (ordering == ERROR_VAL):
+     ordering = maplib.order_by_distance(location, all_stops)
 
    #present X stop choices (with estimated distances)
    print """
@@ -86,7 +117,7 @@ def main():
    print "\nWatching for routes! \n"
 
    #START BUS LIGHT SERVER
-   query(preferred_stop.names[0], preferred_stop_walk_time*60, preferred_routes)
+   query(preferred_stop.names[0], preferred_stop_walk_time*60, preferred_routes, light)
 
 if __name__ == "__main__":
-   main()
+   main(sys.argv[1:])

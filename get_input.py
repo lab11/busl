@@ -16,6 +16,8 @@ def get_user_int(msg, max):
    return number
 
 def display_results(ordering, start_index, n): 
+   if (ordering == float('inf')):
+      return   
    closest = ordering[start_index:start_index+n]
    option = start_index
    for s in closest:
