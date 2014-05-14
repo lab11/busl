@@ -7,7 +7,8 @@ BUSL does a couple things. It will find Mbus stops close to a given location. It
 
 Run it:
 python main.py --serial <Y|N> 
-The serial flag is necessary for Arduino communication
+
+The serial flag is optional. Only use it for Arduino communication
 
 Public Mbus Feed:
 http://mbus.pts.umich.edu/shared/public_feed.xml
